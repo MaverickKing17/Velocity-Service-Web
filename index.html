@@ -20,6 +20,15 @@
                 500: '#f97316',
                 600: '#ea580c',
               }
+            },
+            animation: {
+              'bounce-subtle': 'bounce-subtle 1.5s infinite',
+            },
+            keyframes: {
+              'bounce-subtle': {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-3px)' },
+              }
             }
           }
         }
@@ -28,10 +37,14 @@
 <script type="importmap">
 {
   "imports": {
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "@google/genai": "https://esm.sh/@google/genai@^1.37.0",
     "react/": "https://esm.sh/react@^19.2.3/",
-    "react": "https://esm.sh/react@^19.2.3"
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react-dom": "https://esm.sh/react-dom@^19.2.3",
+    "@google/genai": "https://esm.sh/@google/genai@^1.37.0",
+    "framer-motion": "https://esm.sh/framer-motion@^11.15.0",
+    "clsx": "https://esm.sh/clsx@^2.1.1",
+    "tailwind-merge": "https://esm.sh/tailwind-merge@^2.5.2"
   }
 }
 </script>

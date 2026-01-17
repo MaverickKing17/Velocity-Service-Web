@@ -104,7 +104,7 @@ const App: React.FC = () => {
           <div className="hidden lg:block relative">
             <div className="relative z-10 rounded-[2.5rem] overflow-hidden shadow-2xl border-8 border-white/5 group">
               <img 
-                src="https://i.ibb.co/vCf0YSk4/AI-Voice-Agents-Website-images.png" 
+                src="https://i.ibb.co/B5GZDCS7/Untitled-design.png" 
                 alt="AI Triage Specialists Chloe and Sam" 
                 className="w-full transition-all duration-700 transform group-hover:scale-105" 
               />
@@ -306,7 +306,7 @@ const App: React.FC = () => {
                   <span className="block text-xs font-black text-safetyOrange-500 uppercase tracking-[0.2em] mt-1">Plumbing & Drains</span>
                 </div>
               </div>
-              <p className="text-xl text-slate-400 mb-10 max-w-sm font-medium leading-relaxed">
+              <p className="text-xl text-slate-400 mb-10 max-sm font-medium leading-relaxed">
                 GTA's premier emergency response team. Modern tech for traditional trades.
               </p>
               <div className="flex gap-4">

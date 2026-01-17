@@ -3,14 +3,13 @@ import React, { useState } from 'react';
 import StickyEmergencyButton from './components/StickyEmergencyButton';
 import ChatWidget from './components/ChatWidget';
 
+type ModalType = 'privacy' | 'terms' | 'careers' | null;
+
 const App: React.FC = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [activeModal, setActiveModal] = useState<ModalType>(null);
 
-  /**
-   * Centralized click handler for all navigation to prevent browser-level 
-   * "Navigation Error" in sandboxed environments.
-   */
-  const handleNav = (e: React.MouseEvent, target: string | 'chat' | 'top') => {
+  const handleNav = (e: React.MouseEvent, target: string | 'chat' | 'top' | 'privacy' | 'terms' | 'careers') => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -24,14 +23,40 @@ const App: React.FC = () => {
       return;
     }
 
+    if (['privacy', 'terms', 'careers'].includes(target)) {
+      setActiveModal(target as ModalType);
+      return;
+    }
+
     const element = document.getElementById(target);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else {
-      // Fallback for missing sections: open chat
-      setIsChatOpen(true);
     }
   };
+
+  const renderModalContent = () => {
+    switch (activeModal) {
+      case 'privacy':
+        return {
+          title: 'Privacy Policy',
+          content: 'At Priority Plumbing & Drains, your privacy is paramount. We collect only the information necessary to provide emergency triage and service dispatch. Your data is never sold to third parties and is protected by industry-standard encryption.'
+        };
+      case 'terms':
+        return {
+          title: 'Terms of Service',
+          content: 'Service estimates provided via AI Triage are preliminary. Final pricing is determined on-site by a licensed technician. Emergency response times are subject to traffic conditions and technician availability within the GTA.'
+        };
+      case 'careers':
+        return {
+          title: 'Join the Master Team',
+          content: 'We are currently hiring Master Plumbers and HVAC Technicians in Toronto, North York, and Mississauga. We offer industry-leading compensation and the most advanced technical dispatch tools in Canada.'
+        };
+      default:
+        return null;
+    }
+  };
+
+  const modalData = renderModalContent();
 
   return (
     <div className="min-h-screen font-sans antialiased text-slate-900">
@@ -106,20 +131,6 @@ const App: React.FC = () => {
                 GET A FREE QUOTE
               </button>
             </div>
-            
-            <div className="mt-16 flex flex-wrap justify-center lg:justify-start gap-10 items-center opacity-80">
-              <div className="flex flex-col items-center lg:items-start">
-                <div className="flex items-center gap-1.5 text-yellow-400 mb-1">
-                  {[1, 2, 3, 4, 5].map(s => <i key={s} className="fa-solid fa-star text-sm"></i>)}
-                </div>
-                <span className="text-white font-bold text-sm tracking-wide">4.7/5 HomeStars Rating</span>
-              </div>
-              <div className="w-px h-10 bg-slate-700 hidden sm:block"></div>
-              <div className="flex items-center gap-3 text-white">
-                <i className="fa-solid fa-shield-check text-2xl text-green-500"></i>
-                <span className="font-bold text-sm tracking-wide uppercase">Fully Licensed & Insured</span>
-              </div>
-            </div>
           </div>
 
           <div className="hidden lg:block relative">
@@ -167,7 +178,7 @@ const App: React.FC = () => {
               { icon: 'fa-snowflake', title: 'HVAC & Cooling', desc: 'High-efficiency heat pumps and AC repair with full airflow optimization.' },
               { icon: 'fa-fire-flame-curved', title: 'Heating Repair', desc: 'Emergency furnace fixes and high-efficiency boiler maintenance.' },
               { icon: 'fa-droplet', title: 'Drain Cleaning', desc: 'Hydro-jetting and camera inspections to resolve blockages permanently.' },
-              { icon: 'fa-faucet', title: 'Plumbing Service', desc: 'Full-service leak detection, pipe repair, and fixture installations.' }
+              { icon: 'fa-faucet', title: 'Plumbing Service', desc: 'Leak detection, pipe repair, and fixture installations.' }
             ].map((s, i) => (
               <div key={i} className="p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:bg-white hover:shadow-2xl transition-all group">
                 <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-navy-900 text-2xl mb-6 shadow-sm group-hover:bg-safetyOrange-500 group-hover:text-white transition-colors">
@@ -198,14 +209,14 @@ const App: React.FC = () => {
                   <h2 className="text-3xl lg:text-4xl font-black text-navy-900 leading-tight">Virtual <span className="text-safetyOrange-500">Triage</span> Tool</h2>
                 </div>
                 <p className="text-lg text-slate-600 mb-10 leading-relaxed font-medium">
-                  "Chloe & Sam" identify technical issues remotely, ensuring our technicians arrive prepared with the exact parts required.
+                  "Chloe & Sam" identify technical issues remotely, ensuring our technicians arrive prepared.
                 </p>
                 <ul className="space-y-5 mb-12">
                   {[
                     { icon: "fa-triangle-exclamation", color: "text-red-500", text: "Instant Safety Analysis (CO/Gas)" },
                     { icon: "fa-qrcode", color: "text-blue-500", text: "Furnace Error Code Diagnostics" },
                     { icon: "fa-bolt", color: "text-yellow-500", text: "Visual Triage via Secure Upload" },
-                    { icon: "fa-clock", color: "text-green-500", text: "Direct Routing to Master Specialists" }
+                    { icon: "fa-clock", color: "text-green-500", text: "Direct Routing to Specialists" }
                   ].map((item, idx) => (
                     <li key={idx} className="flex items-center gap-5 p-5 rounded-2xl bg-slate-50 border border-slate-100 transition-colors group">
                       <i className={`fa-solid ${item.icon} ${item.color} text-2xl w-8 text-center`}></i>
@@ -230,11 +241,6 @@ const App: React.FC = () => {
               <p className="text-xl text-slate-500 mb-10 leading-relaxed font-medium">
                 Traditional companies guess. We use data to provide a level of precision and speed the GTA hasn't seen before.
               </p>
-              <div className="bg-white p-8 rounded-3xl border-l-[12px] border-safetyOrange-500 shadow-xl">
-                <p className="text-navy-900 font-bold text-lg leading-relaxed italic">
-                  "By diagnosing before the truck leaves, we increase our first-visit fix rate to over 90%."
-                </p>
-              </div>
             </div>
           </div>
         </div>
@@ -268,35 +274,16 @@ const App: React.FC = () => {
               </div>
             ))}
           </div>
-
-          <div className="mt-20 bg-red-600/10 border border-red-500/30 p-8 rounded-3xl flex flex-col lg:flex-row items-center gap-8 justify-between">
-            <div className="flex items-center gap-6">
-              <i className="fa-solid fa-circle-exclamation text-red-500 text-3xl"></i>
-              <p className="text-lg font-bold text-slate-300">Don't wait for your check. We provide priority direct deposit filing support.</p>
-            </div>
-            <button 
-              onClick={() => setIsChatOpen(true)}
-              className="bg-red-600 text-white px-10 py-4 rounded-2xl font-black text-lg hover:bg-red-700 transition-all shadow-xl active:scale-95 uppercase"
-            >
-              Secure My Rebate
-            </button>
-          </div>
         </div>
       </section>
 
       {/* Service Areas Section */}
       <section id="areas" className="py-24 bg-white border-b border-slate-100 scroll-mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row justify-between items-end mb-16 gap-8">
-            <div className="text-left max-w-2xl">
-              <h2 className="text-navy-900 text-xs font-black uppercase tracking-[0.4em] mb-4">Service Zones</h2>
-              <h3 className="text-4xl lg:text-5xl font-black text-navy-900 mb-6">Our GTA Response Network</h3>
-              <p className="text-xl text-slate-500 font-medium leading-relaxed">Guaranteed 4-hour emergency response times across Toronto and the surrounding regions.</p>
-            </div>
-            <div className="bg-green-50 text-green-700 font-black px-6 py-4 rounded-2xl border border-green-100 flex items-center gap-3">
-              <span className="w-3 h-3 bg-green-600 rounded-full animate-pulse"></span>
-              Dispatch System Active
-            </div>
+          <div className="text-left max-w-2xl mb-16">
+            <h2 className="text-navy-900 text-xs font-black uppercase tracking-[0.4em] mb-4">Service Zones</h2>
+            <h3 className="text-4xl lg:text-5xl font-black text-navy-900 mb-6">Our GTA Response Network</h3>
+            <p className="text-xl text-slate-500 font-medium leading-relaxed">Guaranteed 4-hour emergency response times across Toronto and the regions.</p>
           </div>
 
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-6">
@@ -306,7 +293,6 @@ const App: React.FC = () => {
                   <i className="fa-solid fa-location-dot text-safetyOrange-500 group-hover:text-white text-2xl"></i>
                 </div>
                 <h4 className="font-black text-2xl mb-2 tracking-tight">{area}</h4>
-                <p className="text-sm font-bold text-slate-400 group-hover:text-slate-300 uppercase tracking-widest">Zone A Priority</p>
               </div>
             ))}
           </div>
@@ -330,13 +316,6 @@ const App: React.FC = () => {
               <p className="text-xl text-slate-400 mb-10 max-w-sm font-medium leading-relaxed">
                 GTA's premier emergency response team. Modern tech for traditional trades.
               </p>
-              <div className="flex gap-4">
-                {['facebook-f', 'instagram', 'youtube', 'linkedin-in'].map((icon, idx) => (
-                  <a key={idx} href="#" onClick={(e) => handleNav(e, 'chat')} className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center hover:bg-safetyOrange-500 transition-all">
-                    <i className={`fa-brands fa-${icon} text-lg`}></i>
-                  </a>
-                ))}
-              </div>
             </div>
             
             <div className="lg:col-span-3">
@@ -354,13 +333,10 @@ const App: React.FC = () => {
               <h4 className="font-black text-sm mb-10 uppercase tracking-[0.3em] text-safetyOrange-500">Company</h4>
               <ul className="space-y-4 text-slate-400 font-bold mb-8">
                 <li><a href="#" onClick={(e) => handleNav(e, 'top')} className="hover:text-white transition-colors">About Priority</a></li>
-                <li><a href="#" onClick={(e) => handleNav(e, 'chat')} className="hover:text-white transition-colors">Career Opportunities</a></li>
-                <li><a href="#" onClick={(e) => handleNav(e, 'chat')} className="hover:text-white transition-colors">Privacy Policy</a></li>
-                <li><a href="#" onClick={(e) => handleNav(e, 'chat')} className="hover:text-white transition-colors">Terms of Service</a></li>
+                <li><a href="#" onClick={(e) => handleNav(e, 'careers')} className="hover:text-white transition-colors">Career Opportunities</a></li>
+                <li><a href="#" onClick={(e) => handleNav(e, 'privacy')} className="hover:text-white transition-colors">Privacy Policy</a></li>
+                <li><a href="#" onClick={(e) => handleNav(e, 'terms')} className="hover:text-white transition-colors">Terms of Service</a></li>
               </ul>
-              <div className="bg-white/5 p-6 rounded-3xl border border-white/5 text-xs text-slate-500 font-bold uppercase tracking-widest text-center">
-                TSSA Certified #231294<br/>Master Licensed
-              </div>
             </div>
           </div>
           <div className="mt-24 pt-10 border-t border-white/5 text-center text-sm text-slate-500 font-bold tracking-widest uppercase">
@@ -368,6 +344,30 @@ const App: React.FC = () => {
           </div>
         </div>
       </footer>
+
+      {/* Dedicated Content Modal for Company/Legal Links */}
+      {activeModal && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-navy-900/60 backdrop-blur-sm" onClick={() => setActiveModal(null)}></div>
+          <div className="bg-white rounded-[2rem] p-10 max-w-lg w-full relative z-10 shadow-2xl border border-slate-100">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-black text-navy-900 uppercase tracking-tight">{modalData?.title}</h2>
+              <button onClick={() => setActiveModal(null)} className="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200 transition-colors">
+                <i className="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+            <p className="text-lg text-slate-600 leading-relaxed font-medium mb-8">
+              {modalData?.content}
+            </p>
+            <button 
+              onClick={() => setActiveModal(null)}
+              className="w-full bg-navy-900 text-white py-4 rounded-xl font-bold uppercase tracking-widest hover:bg-navy-800 transition-all"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Dynamic Widgets */}
       <StickyEmergencyButton />

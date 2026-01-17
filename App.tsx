@@ -6,19 +6,31 @@ import ChatWidget from './components/ChatWidget';
 const App: React.FC = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
 
-  // Simplified and more robust scroll handler
-  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+  /**
+   * Centralized click handler for all navigation to prevent browser-level 
+   * "Navigation Error" in sandboxed environments.
+   */
+  const handleNav = (e: React.MouseEvent, target: string | 'chat' | 'top') => {
     e.preventDefault();
-    const element = document.getElementById(id);
-    if (element) {
-      // scrollIntoView is highly reliable and handles the scroll behavior natively
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
+    e.stopPropagation();
 
-  const openTriageAndScroll = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    scrollToSection(e, 'ai-triage');
-    setIsChatOpen(true);
+    if (target === 'top') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (target === 'chat') {
+      setIsChatOpen(true);
+      return;
+    }
+
+    const element = document.getElementById(target);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      // Fallback for missing sections: open chat
+      setIsChatOpen(true);
+    }
   };
 
   return (
@@ -34,7 +46,7 @@ const App: React.FC = () => {
       {/* Navbar */}
       <nav className="bg-white/95 backdrop-blur-md border-b border-gray-100 sticky top-0 z-40 transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="flex items-center gap-3 group">
+          <a href="#" onClick={(e) => handleNav(e, 'top')} className="flex items-center gap-3 group">
             <div className="bg-navy-900 text-white p-2.5 rounded-xl shadow-lg group-hover:bg-safetyOrange-500 transition-colors">
               <i className="fa-solid fa-faucet-drip text-2xl"></i>
             </div>
@@ -45,10 +57,10 @@ const App: React.FC = () => {
           </a>
           
           <div className="hidden lg:flex items-center gap-10">
-            <a href="#rebates" onClick={(e) => scrollToSection(e, 'rebates')} className="text-[13px] font-bold text-navy-900 hover:text-safetyOrange-600 transition-colors uppercase tracking-widest">Rebates</a>
-            <a href="#services" onClick={(e) => scrollToSection(e, 'services')} className="text-[13px] font-bold text-navy-900 hover:text-safetyOrange-600 transition-colors uppercase tracking-widest">Services</a>
-            <a href="#ai-triage" onClick={(e) => scrollToSection(e, 'ai-triage')} className="text-[13px] font-bold text-navy-900 hover:text-safetyOrange-600 transition-colors uppercase tracking-widest">AI Triage</a>
-            <a href="#areas" onClick={(e) => scrollToSection(e, 'areas')} className="text-[13px] font-bold text-navy-900 hover:text-safetyOrange-600 transition-colors uppercase tracking-widest">Service Areas</a>
+            <a href="#" onClick={(e) => handleNav(e, 'rebates')} className="text-[13px] font-bold text-navy-900 hover:text-safetyOrange-600 transition-colors uppercase tracking-widest">Rebates</a>
+            <a href="#" onClick={(e) => handleNav(e, 'services')} className="text-[13px] font-bold text-navy-900 hover:text-safetyOrange-600 transition-colors uppercase tracking-widest">Services</a>
+            <a href="#" onClick={(e) => handleNav(e, 'ai-triage')} className="text-[13px] font-bold text-navy-900 hover:text-safetyOrange-600 transition-colors uppercase tracking-widest">AI Triage</a>
+            <a href="#" onClick={(e) => handleNav(e, 'areas')} className="text-[13px] font-bold text-navy-900 hover:text-safetyOrange-600 transition-colors uppercase tracking-widest">Service Areas</a>
           </div>
 
           <div className="flex items-center gap-4">
@@ -249,7 +261,7 @@ const App: React.FC = () => {
                 <p className="text-safetyOrange-400 font-black text-xs mb-4 uppercase tracking-widest">{card.title}</p>
                 <p className="text-6xl font-black mb-6 group-hover:scale-105 transition-transform origin-left tracking-tighter">{card.amount}</p>
                 <p className="text-slate-400 font-semibold leading-relaxed mb-10">{card.desc}</p>
-                <a href="#ai-triage" onClick={openTriageAndScroll} className="flex items-center justify-between text-white font-black text-sm uppercase tracking-widest hover:text-safetyOrange-500 transition-colors group/link">
+                <a href="#" onClick={(e) => handleNav(e, 'ai-triage')} className="flex items-center justify-between text-white font-black text-sm uppercase tracking-widest hover:text-safetyOrange-500 transition-colors group/link">
                   Check Eligibility
                   <i className="fa-solid fa-arrow-right-long group-hover/link:translate-x-2 transition-transform"></i>
                 </a>
@@ -320,7 +332,7 @@ const App: React.FC = () => {
               </p>
               <div className="flex gap-4">
                 {['facebook-f', 'instagram', 'youtube', 'linkedin-in'].map((icon, idx) => (
-                  <a key={idx} href="#" onClick={(e) => e.preventDefault()} className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center hover:bg-safetyOrange-500 transition-all">
+                  <a key={idx} href="#" onClick={(e) => handleNav(e, 'chat')} className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center hover:bg-safetyOrange-500 transition-all">
                     <i className={`fa-brands fa-${icon} text-lg`}></i>
                   </a>
                 ))}
@@ -330,10 +342,10 @@ const App: React.FC = () => {
             <div className="lg:col-span-3">
               <h4 className="font-black text-sm mb-10 uppercase tracking-[0.3em] text-safetyOrange-500">Quick Links</h4>
               <ul className="space-y-4 text-slate-400 font-bold">
-                <li><a href="#rebates" onClick={(e) => scrollToSection(e, 'rebates')} className="hover:text-white transition-colors">Government Rebates</a></li>
-                <li><a href="#services" onClick={(e) => scrollToSection(e, 'services')} className="hover:text-white transition-colors">Master Services</a></li>
-                <li><a href="#ai-triage" onClick={(e) => scrollToSection(e, 'ai-triage')} className="hover:text-white transition-colors">AI Diagnostics</a></li>
-                <li><a href="#areas" onClick={(e) => scrollToSection(e, 'areas')} className="hover:text-white transition-colors">Service Coverage</a></li>
+                <li><a href="#" onClick={(e) => handleNav(e, 'rebates')} className="hover:text-white transition-colors">Government Rebates</a></li>
+                <li><a href="#" onClick={(e) => handleNav(e, 'services')} className="hover:text-white transition-colors">Master Services</a></li>
+                <li><a href="#" onClick={(e) => handleNav(e, 'ai-triage')} className="hover:text-white transition-colors">AI Diagnostics</a></li>
+                <li><a href="#" onClick={(e) => handleNav(e, 'areas')} className="hover:text-white transition-colors">Service Coverage</a></li>
                 <li><a href="tel:2892164428" className="text-safetyOrange-500 hover:underline">Emergency Line</a></li>
               </ul>
             </div>
@@ -341,10 +353,10 @@ const App: React.FC = () => {
             <div className="lg:col-span-4">
               <h4 className="font-black text-sm mb-10 uppercase tracking-[0.3em] text-safetyOrange-500">Company</h4>
               <ul className="space-y-4 text-slate-400 font-bold mb-8">
-                <li><a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-white transition-colors">About Priority</a></li>
-                <li><a href="#" onClick={(e) => e.preventDefault()} className="hover:text-white transition-colors">Career Opportunities</a></li>
-                <li><a href="#" onClick={(e) => e.preventDefault()} className="hover:text-white transition-colors">Privacy Policy</a></li>
-                <li><a href="#" onClick={(e) => e.preventDefault()} className="hover:text-white transition-colors">Terms of Service</a></li>
+                <li><a href="#" onClick={(e) => handleNav(e, 'top')} className="hover:text-white transition-colors">About Priority</a></li>
+                <li><a href="#" onClick={(e) => handleNav(e, 'chat')} className="hover:text-white transition-colors">Career Opportunities</a></li>
+                <li><a href="#" onClick={(e) => handleNav(e, 'chat')} className="hover:text-white transition-colors">Privacy Policy</a></li>
+                <li><a href="#" onClick={(e) => handleNav(e, 'chat')} className="hover:text-white transition-colors">Terms of Service</a></li>
               </ul>
               <div className="bg-white/5 p-6 rounded-3xl border border-white/5 text-xs text-slate-500 font-bold uppercase tracking-widest text-center">
                 TSSA Certified #231294<br/>Master Licensed

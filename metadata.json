@@ -1,0 +1,7 @@
+{
+  "name": "Priority Plumbing & Drains Landing Page",
+  "description": "High-performance HVAC and plumbing landing page with AI-powered triage and GTA-specific targeting.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}

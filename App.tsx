@@ -62,7 +62,8 @@ const App: React.FC = () => {
       {/* Hero Section */}
       <section className="relative bg-navy-900 pt-24 pb-32 lg:pt-32 lg:pb-48 overflow-hidden">
         <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-navy-800/50 to-transparent opacity-50"></div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid lg:grid-cols-2 gap-16 items-center">
+        {/* Expanded container for a larger image presentation */}
+        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-12 relative z-10 grid lg:grid-cols-[1fr_55%] gap-12 lg:gap-20 items-center">
           <div className="text-center lg:text-left">
             <div className="inline-flex items-center gap-2 bg-safetyOrange-500/15 text-safetyOrange-500 px-5 py-2 rounded-full text-xs font-black mb-8 uppercase tracking-widest border border-safetyOrange-500/20">
               <span className="w-2 h-2 bg-safetyOrange-500 rounded-full animate-pulse"></span>
@@ -102,11 +103,12 @@ const App: React.FC = () => {
           </div>
 
           <div className="hidden lg:block relative">
-            <div className="relative z-10 rounded-[2.5rem] overflow-hidden shadow-2xl border-8 border-white/5 group">
+            {/* Increased scale and container size for the image */}
+            <div className="relative z-10 rounded-[3rem] overflow-hidden shadow-2xl border-[12px] border-white/5 group transform lg:scale-105 origin-center">
               <img 
                 src="https://i.ibb.co/B5GZDCS7/Untitled-design.png" 
                 alt="AI Triage Specialists Chloe and Sam" 
-                className="w-full transition-all duration-700 transform group-hover:scale-105" 
+                className="w-full h-auto transition-all duration-700 transform group-hover:scale-105" 
               />
               <div className="absolute inset-0 bg-gradient-to-t from-navy-900/40 via-transparent to-transparent"></div>
               <div className="absolute bottom-8 left-8 right-8 bg-white/95 backdrop-blur-md p-6 rounded-3xl shadow-2xl border border-white/20">
@@ -306,7 +308,7 @@ const App: React.FC = () => {
                   <span className="block text-xs font-black text-safetyOrange-500 uppercase tracking-[0.2em] mt-1">Plumbing & Drains</span>
                 </div>
               </div>
-              <p className="text-xl text-slate-400 mb-10 max-sm font-medium leading-relaxed">
+              <p className="text-xl text-slate-400 mb-10 max-w-sm font-medium leading-relaxed">
                 GTA's premier emergency response team. Modern tech for traditional trades.
               </p>
               <div className="flex gap-4">

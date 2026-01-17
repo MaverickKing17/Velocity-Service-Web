@@ -6,10 +6,19 @@ import ChatWidget from './components/ChatWidget';
 const App: React.FC = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
 
-  const openTriage = (e: React.MouseEvent) => {
+  // Simplified and more robust scroll handler
+  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
+    const element = document.getElementById(id);
+    if (element) {
+      // scrollIntoView is highly reliable and handles the scroll behavior natively
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  const openTriageAndScroll = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    scrollToSection(e, 'ai-triage');
     setIsChatOpen(true);
-    document.getElementById('ai-triage')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
@@ -25,7 +34,7 @@ const App: React.FC = () => {
       {/* Navbar */}
       <nav className="bg-white/95 backdrop-blur-md border-b border-gray-100 sticky top-0 z-40 transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <a href="#" className="flex items-center gap-3 group">
+          <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="flex items-center gap-3 group">
             <div className="bg-navy-900 text-white p-2.5 rounded-xl shadow-lg group-hover:bg-safetyOrange-500 transition-colors">
               <i className="fa-solid fa-faucet-drip text-2xl"></i>
             </div>
@@ -36,10 +45,10 @@ const App: React.FC = () => {
           </a>
           
           <div className="hidden lg:flex items-center gap-10">
-            <a href="#rebates" className="text-[13px] font-bold text-navy-900 hover:text-safetyOrange-600 transition-colors uppercase tracking-widest">Rebates</a>
-            <a href="#services" className="text-[13px] font-bold text-navy-900 hover:text-safetyOrange-600 transition-colors uppercase tracking-widest">Services</a>
-            <a href="#ai-triage" className="text-[13px] font-bold text-navy-900 hover:text-safetyOrange-600 transition-colors uppercase tracking-widest">AI Triage</a>
-            <a href="#areas" className="text-[13px] font-bold text-navy-900 hover:text-safetyOrange-600 transition-colors uppercase tracking-widest">Service Areas</a>
+            <a href="#rebates" onClick={(e) => scrollToSection(e, 'rebates')} className="text-[13px] font-bold text-navy-900 hover:text-safetyOrange-600 transition-colors uppercase tracking-widest">Rebates</a>
+            <a href="#services" onClick={(e) => scrollToSection(e, 'services')} className="text-[13px] font-bold text-navy-900 hover:text-safetyOrange-600 transition-colors uppercase tracking-widest">Services</a>
+            <a href="#ai-triage" onClick={(e) => scrollToSection(e, 'ai-triage')} className="text-[13px] font-bold text-navy-900 hover:text-safetyOrange-600 transition-colors uppercase tracking-widest">AI Triage</a>
+            <a href="#areas" onClick={(e) => scrollToSection(e, 'areas')} className="text-[13px] font-bold text-navy-900 hover:text-safetyOrange-600 transition-colors uppercase tracking-widest">Service Areas</a>
           </div>
 
           <div className="flex items-center gap-4">
@@ -62,7 +71,6 @@ const App: React.FC = () => {
       {/* Hero Section */}
       <section className="relative bg-navy-900 pt-24 pb-32 lg:pt-32 lg:pb-48 overflow-hidden">
         <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-navy-800/50 to-transparent opacity-50"></div>
-        {/* Expanded container for a larger image presentation */}
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-12 relative z-10 grid lg:grid-cols-[1fr_55%] gap-12 lg:gap-20 items-center">
           <div className="text-center lg:text-left">
             <div className="inline-flex items-center gap-2 bg-safetyOrange-500/15 text-safetyOrange-500 px-5 py-2 rounded-full text-xs font-black mb-8 uppercase tracking-widest border border-safetyOrange-500/20">
@@ -103,7 +111,6 @@ const App: React.FC = () => {
           </div>
 
           <div className="hidden lg:block relative">
-            {/* Increased scale and container size for the image */}
             <div className="relative z-10 rounded-[3rem] overflow-hidden shadow-2xl border-[12px] border-white/5 group transform lg:scale-105 origin-center">
               <img 
                 src="https://i.ibb.co/B5GZDCS7/Untitled-design.png" 
@@ -179,7 +186,7 @@ const App: React.FC = () => {
                   <h2 className="text-3xl lg:text-4xl font-black text-navy-900 leading-tight">Virtual <span className="text-safetyOrange-500">Triage</span> Tool</h2>
                 </div>
                 <p className="text-lg text-slate-600 mb-10 leading-relaxed font-medium">
-                  "Jessica" identifies technical issues remotely, ensuring our technicians arrive prepared with the exact parts required.
+                  "Chloe & Sam" identify technical issues remotely, ensuring our technicians arrive prepared with the exact parts required.
                 </p>
                 <ul className="space-y-5 mb-12">
                   {[
@@ -242,7 +249,7 @@ const App: React.FC = () => {
                 <p className="text-safetyOrange-400 font-black text-xs mb-4 uppercase tracking-widest">{card.title}</p>
                 <p className="text-6xl font-black mb-6 group-hover:scale-105 transition-transform origin-left tracking-tighter">{card.amount}</p>
                 <p className="text-slate-400 font-semibold leading-relaxed mb-10">{card.desc}</p>
-                <a href="#ai-triage" onClick={openTriage} className="flex items-center justify-between text-white font-black text-sm uppercase tracking-widest hover:text-safetyOrange-500 transition-colors group/link">
+                <a href="#ai-triage" onClick={openTriageAndScroll} className="flex items-center justify-between text-white font-black text-sm uppercase tracking-widest hover:text-safetyOrange-500 transition-colors group/link">
                   Check Eligibility
                   <i className="fa-solid fa-arrow-right-long group-hover/link:translate-x-2 transition-transform"></i>
                 </a>
@@ -313,7 +320,7 @@ const App: React.FC = () => {
               </p>
               <div className="flex gap-4">
                 {['facebook-f', 'instagram', 'youtube', 'linkedin-in'].map((icon, idx) => (
-                  <a key={idx} href="#" className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center hover:bg-safetyOrange-500 transition-all">
+                  <a key={idx} href="#" onClick={(e) => e.preventDefault()} className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center hover:bg-safetyOrange-500 transition-all">
                     <i className={`fa-brands fa-${icon} text-lg`}></i>
                   </a>
                 ))}
@@ -323,10 +330,10 @@ const App: React.FC = () => {
             <div className="lg:col-span-3">
               <h4 className="font-black text-sm mb-10 uppercase tracking-[0.3em] text-safetyOrange-500">Quick Links</h4>
               <ul className="space-y-4 text-slate-400 font-bold">
-                <li><a href="#rebates" className="hover:text-white transition-colors">Government Rebates</a></li>
-                <li><a href="#services" className="hover:text-white transition-colors">Master Services</a></li>
-                <li><a href="#ai-triage" className="hover:text-white transition-colors">AI Diagnostics</a></li>
-                <li><a href="#areas" className="hover:text-white transition-colors">Service Coverage</a></li>
+                <li><a href="#rebates" onClick={(e) => scrollToSection(e, 'rebates')} className="hover:text-white transition-colors">Government Rebates</a></li>
+                <li><a href="#services" onClick={(e) => scrollToSection(e, 'services')} className="hover:text-white transition-colors">Master Services</a></li>
+                <li><a href="#ai-triage" onClick={(e) => scrollToSection(e, 'ai-triage')} className="hover:text-white transition-colors">AI Diagnostics</a></li>
+                <li><a href="#areas" onClick={(e) => scrollToSection(e, 'areas')} className="hover:text-white transition-colors">Service Coverage</a></li>
                 <li><a href="tel:2892164428" className="text-safetyOrange-500 hover:underline">Emergency Line</a></li>
               </ul>
             </div>
@@ -334,10 +341,10 @@ const App: React.FC = () => {
             <div className="lg:col-span-4">
               <h4 className="font-black text-sm mb-10 uppercase tracking-[0.3em] text-safetyOrange-500">Company</h4>
               <ul className="space-y-4 text-slate-400 font-bold mb-8">
-                <li><a href="#" className="hover:text-white transition-colors">About Priority</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Career Opportunities</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
+                <li><a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-white transition-colors">About Priority</a></li>
+                <li><a href="#" onClick={(e) => e.preventDefault()} className="hover:text-white transition-colors">Career Opportunities</a></li>
+                <li><a href="#" onClick={(e) => e.preventDefault()} className="hover:text-white transition-colors">Privacy Policy</a></li>
+                <li><a href="#" onClick={(e) => e.preventDefault()} className="hover:text-white transition-colors">Terms of Service</a></li>
               </ul>
               <div className="bg-white/5 p-6 rounded-3xl border border-white/5 text-xs text-slate-500 font-bold uppercase tracking-widest text-center">
                 TSSA Certified #231294<br/>Master Licensed
